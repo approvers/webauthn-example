@@ -1,8 +1,8 @@
-import { Register, User } from '../dto';
+import { Registration, User } from '../dto';
 import { Routing } from './routing';
 
 export class Api {
-  static register(req: Register): Promise<User> {
+  static register(req: Registration): Promise<User> {
     return fetch(Routing.api.register, {
       method: 'POST',
       headers: {

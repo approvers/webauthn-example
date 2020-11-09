@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Register, User } from '../../dto';
+import { Registration, User } from '../../dto';
 import { createDiscordClient } from '../../services/discord';
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const register = req.body as Register;
+  const register = req.body as Registration;
   const client = createDiscordClient();
   const token = await client.getToken(register.code);
   const user = await client.authenticate(token).getUser();
