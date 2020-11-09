@@ -1,4 +1,7 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# webauthn-example
+![Next.js](https://github.com/approvers/webauthn-example/workflows/Next.js/badge.svg)
+
+Just an example of WebAuthn with Discord OAuth, built on the top of Next.js.
 
 ## Getting Started
 
