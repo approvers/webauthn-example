@@ -5,6 +5,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "storybook": "start-storybook -s ./public",
+    "storybook:build": "build-storybook -o ./out/storybook",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
