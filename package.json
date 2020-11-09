@@ -5,6 +5,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "storybook": "start-storybook -s ./public",
+    "storybook:build": "build-storybook -o ./out/storybook",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -17,6 +19,7 @@
     "react-dom": "17.0.1"
   },
   "devDependencies": {
+    "@storybook/react": "^6.1.0-beta.5",
     "@types/node": "^14.14.6",
     "@types/react": "^16.9.56",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
