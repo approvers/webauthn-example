@@ -4,6 +4,27 @@ import { Storage } from '../services';
 import { FC } from '..';
 import { User } from '../dto';
 
+type InnerProps = {
+  user: User,
+};
+
+const Inner: FC<InnerProps> = ({ user }: InnerProps) => {
+  if (!user) {
+    return <Spinner />;
+  }
+
+  return (
+    <>
+      <Avatar
+        name={ user.name }
+        url={ user.avatarUrl }
+      />
+      <Name>{ user.name }</Name>
+      <Email address={ user.email } />
+    </>
+  );
+};
+
 const Login: FC = () => {
   const [user, setUser] = useState(null as User);
 
@@ -14,22 +35,7 @@ const Login: FC = () => {
 
   return (
     <Panel>
-      {
-        user
-          ? (
-            <>
-              <Avatar
-                name={ user.name }
-                url={ user.avatarUrl }
-              />
-              <Name>{ user.name }</Name>
-              <Email address={ user.email } />
-            </>
-          )
-          : (
-            <Spinner />
-          )
-      }
+      <Inner user={ user } />
     </Panel>
   );
 };
