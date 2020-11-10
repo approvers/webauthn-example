@@ -9,10 +9,8 @@ const Home: FC = () => {
 
   useEffect(
     () => {
-      router
-        .push(Storage.user.exists() ? Routing.login : Routing.api.oauth)
-        .then()
-      ;
+      // noinspection JSIgnoredPromiseFromCall
+      router.push(Storage.user.exists() ? Routing.login : Routing.api.oauth);
     },
     [],
   );
