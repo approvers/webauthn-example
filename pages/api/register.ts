@@ -5,9 +5,9 @@ import { createFaunaClient } from '../../services/fauna';
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const register = req.body as Registration;
-  const client = createDiscordClient();
-  const token = await client.getToken(register.code);
-  const discordUser = await client.authenticate(token).getUser();
+  const discordClient = createDiscordClient();
+  const discordToken = await discordClient.getToken(register.code);
+  const discordUser = await discordClient.authenticate(discordToken).getUser();
   const user: User = {
     id: discordUser.id,
     name: `${discordUser.username}#${discordUser.discriminator}`,
