@@ -2,9 +2,19 @@ import { Client, Expr, query as q, values as v } from 'faunadb';
 import { env } from 'process';
 import { User } from '../../dto';
 
-export class FaunaClient {
+export interface IFaunaClient {
+  readonly user: IFaunaCollectionClient<User>;
+}
+
+export interface IFaunaCollectionClient<T> {
+  exists(key: string): Promise<boolean>;
+  find(key: string): Promise<v.Document<T> | null>;
+  persist(dto: T): Promise<void>;
+}
+
+export class FaunaClient implements IFaunaClient {
   private readonly client: Client;
-  public readonly user: FaunaCollectionClient<User>;
+  public readonly user: IFaunaCollectionClient<User>;
 
   constructor(
     secret: string,
@@ -16,7 +26,7 @@ export class FaunaClient {
     this.user = this.createCollectionClient('users', 'user_id', 'id');
   }
 
-  private createCollectionClient<T>(collection: string, index: string, keyProperty: string): FaunaCollectionClient<T> {
+  private createCollectionClient<T>(collection: string, index: string, keyProperty: string): IFaunaCollectionClient<T> {
     return new FaunaCollectionClient<T>(
       this.client,
       collection,
@@ -26,7 +36,7 @@ export class FaunaClient {
   }
 }
 
-export class FaunaCollectionClient<T> {
+export class FaunaCollectionClient<T> implements IFaunaCollectionClient<T> {
   constructor(
     private client: Client,
     private collection: string,
@@ -88,7 +98,7 @@ export class FaunaCollectionClient<T> {
   }
 }
 
-export const createFaunaClient = (): FaunaClient => {
+export const createFaunaClient = (): IFaunaClient => {
   return new FaunaClient(
     env.FAUNA_SECRET_KEY,
   );
