@@ -64,11 +64,12 @@ export class FaunaCollectionClient<T> {
 
   async persist(dto: T): Promise<void> {
     const key = dto[this.keyProperty];
+    const current = await this.find(key);
 
-    if (await this.exists(key)) {
+    if (current !== null) {
       return void await this.client.query(
         q.Update(
-          this.ref(key),
+          current.ref,
           {
             data: dto,
           },
