@@ -19,11 +19,37 @@ const Callback: FC = () => {
       return;
     }
 
-    Api.register({ code })
-      .then(user => Storage.user.save(user as User))
-      .then(() => router.push(Routing.login))
-      .catch(console.error)
-    ;
+    (async () => {
+      const session = await Api.register({ code });
+      const user = session.user;
+
+      const challenge = await Api.challenge();
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge: Uint8Array.from(atob(challenge.value), c => c.charCodeAt(0)),
+          rp: {
+            name: 'Approvers',
+            id: 'localhost',
+          },
+          user: {
+            id: Uint8Array.from(user.id, c => c.charCodeAt(0)),
+            name: user.email,
+            displayName: user.name,
+          },
+          pubKeyCredParams: [
+            {
+              alg: -7,
+              type: 'public-key',
+            },
+          ],
+          timeout: 50000,
+        },
+      });
+
+      console.log(credential);
+
+      await router.push(Routing.login);
+    })();
   }, [router]);
 
   return (

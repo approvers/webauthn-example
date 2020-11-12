@@ -12,5 +12,6 @@ export const Routing = {
   api: prefixed('/api', {
     oauth: '/oauth',
     register: '/register',
+    challenge: '/challenge',
   }),
 };

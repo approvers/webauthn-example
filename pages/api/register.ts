@@ -1,5 +1,6 @@
+import { randomBytes } from 'crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Registration, User } from '../../dto';
+import { Registration, Session, User } from '../../dto';
 import { createDiscordClient } from '../../services/discord';
 import { createFaunaClient } from '../../services/fauna';
 
@@ -15,7 +16,14 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
     avatarUrl: `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`,
   };
 
-  await createFaunaClient().user.persist(user);
+  const session: Session = {
+    user: user,
+    secret: randomBytes(64).toString('base64'),
+  };
 
-  res.json(user);
+  const faunaClient = createFaunaClient();
+  await faunaClient.user.persist(user);
+  await faunaClient.session.persist(session);
+
+  res.json(session);
 };

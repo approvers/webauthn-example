@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Avatar, Email, Name, Panel, Spinner } from '../components';
-import { Storage } from '../services';
+import { Api, Storage } from '../services';
 import { FC } from '..';
 import { User } from '../dto';
 
@@ -29,7 +29,27 @@ const Login: FC = () => {
   const [user, setUser] = useState(null as User);
 
   useEffect(
-    () => setUser(Storage.user.load()),
+    () => {
+      setUser(Storage.user.load());
+
+      (async () => {
+        const challenge = await Api.challenge();
+        const credential = await navigator.credentials.get({
+          publicKey: {
+            challenge: Uint8Array.from(atob(challenge.value), c => c.charCodeAt(0)),
+            allowCredentials: [
+              {
+                id: Uint8Array.from(user.credentialId, c => c.charCodeAt(0)),
+                type: 'public-key',
+              },
+            ],
+            timeout: 50000,
+          },
+        });
+
+        console.log(credential);
+      })();
+    },
     [],
   );
 

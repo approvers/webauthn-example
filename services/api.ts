@@ -1,8 +1,8 @@
-import { Registration, User } from '../dto';
+import { Challenge, Registration, Session } from '../dto';
 import { Routing } from './routing';
 
 export class Api {
-  static register(req: Registration): Promise<User> {
+  static register(req: Registration): Promise<Session> {
     return fetch(Routing.api.register, {
       method: 'POST',
       headers: {
@@ -10,7 +10,17 @@ export class Api {
       },
       body: JSON.stringify(req),
     })
-      .then(response => response.json() as Promise<User>)
+      .then(response => response.json())
+      .then(object => object as Session)
+    ;
+  }
+
+  static challenge(): Promise<Challenge> {
+    return fetch(Routing.api.challenge, {
+      method: 'POST',
+    })
+      .then(response => response.json())
+      .then(object => object as Challenge)
     ;
   }
 }
