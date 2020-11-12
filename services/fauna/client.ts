@@ -13,14 +13,15 @@ export class FaunaClient {
       secret,
     });
 
-    this.user = this.createCollectionClient('users', 'user_id');
+    this.user = this.createCollectionClient('users', 'user_id', 'id');
   }
 
-  private createCollectionClient<T>(collection: string, index: string): FaunaCollectionClient<T> {
+  private createCollectionClient<T>(collection: string, index: string, keyProperty: string): FaunaCollectionClient<T> {
     return new FaunaCollectionClient<T>(
       this.client,
       collection,
       index,
+      keyProperty,
     );
   }
 }
@@ -30,6 +31,7 @@ export class FaunaCollectionClient<T> {
     private client: Client,
     private collection: string,
     private index: string,
+    private keyProperty: string,
   ) {
   }
 
@@ -60,13 +62,15 @@ export class FaunaCollectionClient<T> {
     );
   }
 
-  async persist(user: User): Promise<void> {
-    if (await this.exists(user.id)) {
+  async persist(dto: T): Promise<void> {
+    const key = dto[this.keyProperty];
+
+    if (await this.exists(key)) {
       return void await this.client.query(
         q.Update(
-          this.ref(user.id),
+          this.ref(key),
           {
-            data: user,
+            data: dto,
           },
         ),
       );
@@ -76,7 +80,7 @@ export class FaunaCollectionClient<T> {
       q.Create(
         q.Collection(this.collection),
         {
-          data: user,
+          data: dto,
         },
       ),
     );
